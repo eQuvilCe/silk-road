@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Silk Road 2.0</title>
+    <meta name="description" content="An interactive 3D journey along the Silk Road — lead a caravan from Chang'an to Venice." />
+    <meta name="theme-color" content="#25170d" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Silk Road 2.0 — ride a caravan from Chang'an to Venice" />
+    <meta property="og:description" content="An interactive 3D journey: ten cities, ≈10 500 km, living camels, fireworks in every city and the stories behind the road." />
+    <meta property="og:image" content="https://silk-road-ecru.vercel.app/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Silk Road 2.0" />
+    <meta name="twitter:description" content="Ride a 3D caravan from Chang'an to Venice." />
+    <meta name="twitter:image" content="https://silk-road-ecru.vercel.app/og.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Noto+Sans+Old+Turkic&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400;1,6..96,500&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <div id="loader"><span>Saddling the camels…</span></div>
+
+    <header class="hud-top" hidden>
+      <a class="logo" href="#" aria-label="Silk Road 2.0">SILK ROAD<sup>2.0</sup></a>
+      <div class="hud-stop"><small>Stop</small><span id="stop-name">On the road</span></div>
+    </header>
+
+      <nav class="m-nav" aria-label="Sections">
+      <a class="m-logo" href="#top" aria-label="Silk Road 2.0, back to the start">
+        <svg class="m-knot" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 20c6-12 22-12 28 0-6 12-22 12-28 0z" /><path d="M20 6c12 6 12 22 0 28-12-6-12-22 0-28z" /></svg>
+        <span class="m-logo-word" data-roll>Silk Road</span><sup>2.0</sup>
+      </a>
+      <div class="m-pill" data-pill>
+        <i class="m-ind" aria-hidden="true"></i>
+        <a href="#top" data-roll>Route</a>
+        <a href="#postcards" data-roll>Places</a>
+        <a href="#goods" data-roll>Cargo</a>
+        <a href="#camel" data-roll>Camel</a>
+        <a href="#climate" data-roll>Climate</a>
+        <a href="#post" data-roll>Post</a>
+        <a href="#time" data-roll>History</a>
+        <a href="#reviews" data-roll>Reviews</a>
+        <a href="#compare" data-roll>Plans</a>
+      </div>
+      <div class="m-right">
+        <button class="m-sound" data-sound type="button" aria-pressed="false" aria-label="Sound on/off"><i></i><i></i><i></i><i></i></button>
+        <span class="m-now" aria-live="polite"><small>Now</small><b data-now>Manifesto</b></span>
+        <button class="m-ride" data-ride aria-label="Ride again from Chang'an">
+          <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20" class="m-ring-bg" /><circle cx="22" cy="22" r="20" class="m-ring" data-ring /></svg>
+          <span>↺</span>
+        </button>
+        <button class="m-burger" data-burger aria-label="Open menu" aria-expanded="false"><i></i><i></i></button>
+      </div>
+    </nav>
+    <div class="m-menu" data-menu aria-hidden="true">
+      <div class="m-menu-photo" data-menu-photo></div>
+      <ol class="m-menu-list">
+        <li><a href="#top" data-img="registan.jpg"><small>00</small>The route</a></li>
+        <li><a href="#postcards" data-img="shahizinda.jpg"><small>03</small>Places</a></li>
+        <li><a href="#goods" data-img="cocoons.jpg"><small>04</small>Cargo</a></li>
+        <li><a href="#camel" data-img="gobi.jpg"><small>05</small>The camel</a></li>
+        <li><a href="#climate" data-img="pamir.jpg"><small>06</small>Climate</a></li>
+        <li><a href="#post" data-img="inscription.jpg"><small>07</small>Caravan post</a></li>
+        <li><a href="#time" data-img="atlas.jpg"><small>08</small>History</a></li>
+        <li><a href="#reviews" data-img="marcopolo.jpg"><small>09</small>Reviews</a></li>
+        <li><a href="#compare" data-img="dhow.jpg"><small>11</small>Plans</a></li>
+        <li><a href="#paper" data-img="library.jpg"><small>12</small>Research</a></li>
+          <li><a href="#quiz" data-img="cocoons.jpg"><small>13</small>Quiz</a></li>
+      </ol>
+    </div>
+
+    <!-- Intro -->
+    <section id="intro" class="intro">
+      <p class="eyebrow">A caravan simulator · open since 130 BC</p>
+      <h1>
+        <span class="row">Silk</span>
+        <span class="row">Road<em>2.0</em></span>
+      </h1>
+      <div class="intro-bottom">
+        <p class="lede">
+          Ten cities. ≈10 500 km. One thread of silk.<br />
+          Lead the caravan from Chang'an to Venice — scroll to move.
+        </p>
+        <dl class="specs">
+          <div><dt>Engine</dt><dd>5 Bactrian camels</dd></div>
+          <div><dt>Top speed</dt><dd>30 km / day</dd></div>
+          <div><dt>Navigation</dt><dd>Stars, mostly</dd></div>
+          <div><dt>Connectivity</dt><dd>None. Zero. Bliss.</dd></div>
+          <div><dt>Fuel</dt><dd>Water, sometimes</dd></div>
+        </dl>
+      </div>
+      <button id="start" class="scroll-cue"><span>Scroll to depart</span><i></i></button>
+    </section>
+
+    <!-- City chapters -->
+    <div id="chapters" class="chapters"></div>
+
+    <!-- Outro -->
+    <section id="outro" class="outro">
+      <p class="eyebrow">Chang'an → Venice</p>
+      <h2><span class="row">One</span><span class="row">thread.</span></h2>
+      <p class="lede">
+        ≈10 500 km, ten cities and about a year on the road. Silk went west — and paper, music, medicine and
+        ideas travelled both ways along the same thread.
+      </p>
+      <button id="again" class="btn">↺ Ride again</button>
+      <p class="credit">Silk Road 2.0 — an interactive journey · built with Three.js · camel by kenchoo and horse by MAXDESIGN-3D (CC BY 4.0, Sketchfab) · textures by Poly Haven (CC0)</p>
+    </section>
+
+    <!-- HUD -->
+    <aside class="hud-bottom">
+      <div class="hud-odo">
+        <div><small>Distance</small><strong><span id="km">0</span><em>km</em></strong></div>
+        <div><small>Day</small><strong id="day">1</strong></div>
+      </div>
+      <nav id="route-bar" class="route-bar" aria-label="Cities on the route"></nav>
+      <div class="hud-cargo">
+        <small>Cargo</small>
+        <ul id="cargo-list"></ul>
+      </div>
+    </aside>
+
+    <div id="camel-hint" class="camel-hint">Click the camel</div>
+    <div id="camel-card" class="camel-card" role="status"></div>
+
+    <div class="scroll-space" aria-hidden="true"></div>
+
+    <!-- ============================================================ the long scroll after the journey -->
+    <main id="more" class="more">
+      <canvas class="m-3d" aria-hidden="true"></canvas>
+
+
+      <!-- 01 manifesto -->
+      <section class="m-manifesto" id="manifesto">
+        <div class="m-sticky">
+          <p class="eyebrow">01 — It's not just a road</p>
+          <p class="m-words" data-words>
+            For sixteen centuries this was the internet. Ten thousand kilometres of peer-to-peer, offline-first,
+            camel-powered connectivity — and it still shipped faster than some startups.
+          </p>
+        </div>
+      </section>
+
+      <!-- 02 numbers -->
+      <section class="m-stats m-dark">
+        <p class="eyebrow">02 — By the numbers</p>
+        <div class="m-stat-grid">
+          <div class="m-stat"><strong data-count="10500">0</strong><span>km, Chang'an → Venice</span></div>
+          <div class="m-stat"><strong data-count="1600">0</strong><span>years in service</span></div>
+          <div class="m-stat"><strong data-count="350">0</strong><span>days, end to end</span></div>
+          <div class="m-stat"><strong data-count="30">0</strong><span>km a day, flat out</span></div>
+          <div class="m-stat"><strong data-count="200">0</strong><span>kg of silk per camel</span></div>
+          <div class="m-stat"><strong data-count="0">0</strong><span>bars of Wi-Fi</span></div>
+        </div>
+      </section>
+
+      <!-- interlude: one day with the caravan -->
+      <section class="x-day" id="oneday" data-day>
+        <div class="m-sticky x-day-sticky">
+          <div class="x-sky" aria-hidden="true"><i class="x-sun"></i><i class="x-moon"></i></div>
+          <p class="eyebrow">Interlude — one day on the road</p>
+          <h2 class="x-sand-title"><span class="sr-only">A day with the caravan</span><canvas data-sand aria-hidden="true"></canvas></h2>
+          <div class="x-stages">
+            <article class="x-stage"><time>05:30</time><h3>Dawn — loading up</h3><p data-loom>Camels grumble, ropes creak, tea boils over a small fire. The caravan leaves before the sun turns cruel.</p></article>
+            <article class="x-stage"><time>12:00</time><h3>Noon — the long walk</h3><p data-loom>Heat shimmers over the sand. Riders doze in the saddle, and the lead camel’s bell keeps everyone in line.</p></article>
+            <article class="x-stage"><time>18:30</time><h3>Dusk — the caravanserai</h3><p data-loom>A walled inn with a single gate. Animals below, merchants above, and prices and gossip from every city on the road.</p></article>
+            <article class="x-stage"><time>23:00</time><h3>Night — under the stars</h3><p data-loom>Guards by the fire, stories in four languages, and tomorrow’s route written in the stars.</p></article>
+          </div>
+          <ol class="x-clock" aria-hidden="true"><li></li><li></li><li></li><li></li></ol>
+        </div>
+      </section>
+
+      <div class="m-marquee " data-marquee aria-hidden="true"><div class="m-mq-track"><span>Silk</span><i>✦</i><span>Paper</span><i>✦</i><span>Jade</span><i>✦</i><span>Glass</span><i>✦</i><span>Horses</span><i>✦</i><span>Grapes</span><i>✦</i><span>Music</span><i>✦</i><span>Ideas</span><i>✦</i><span>Spices</span><i>✦</i><span>Carpets</span><i>✦</i><span>Silk</span><i>✦</i><span>Paper</span><i>✦</i><span>Jade</span><i>✦</i><span>Glass</span><i>✦</i><span>Horses</span><i>✦</i><span>Grapes</span><i>✦</i><span>Music</span><i>✦</i><span>Ideas</span><i>✦</i><span>Spices</span><i>✦</i><span>Carpets</span><i>✦</i></div></div>
+
+      <!-- postcards: real photos, parallax -->
+      <section class="m-postcards" id="postcards">
+        <header class="m-head">
+          <p class="eyebrow">03 — Postcards from the road</p>
+          <h2>The road<br /><em>is still there.</em></h2>
+        </header>
+        <div class="m-cards-grid">
+          <figure class="m-shot tall" data-speed="0.10"><div class="m-shot-img ph tilt"><img src="photos/shahizinda.jpg" alt="Blue-tiled mausoleums of Shah-i-Zinda in Samarkand" loading="lazy" /></div><figcaption><b>Samarkand</b>Shah-i-Zinda, the avenue of mausoleums</figcaption></figure>
+          <figure class="m-shot" data-speed="-0.06"><div class="m-shot-img ph tilt"><img src="photos/dunhuang.jpg" alt="Crescent Lake among the dunes near Dunhuang" loading="lazy" /></div><figcaption><b>Dunhuang</b>Crescent Lake and the Singing Sand Dunes</figcaption></figure>
+          <figure class="m-shot" data-speed="0.16"><div class="m-shot-img ph tilt"><img src="photos/camels.jpg" alt="Bactrian camels of a caravan, photographed in the 1890s" loading="lazy" /></div><figcaption><b>The caravan</b>Bactrian camels, photographed in the 1890s</figcaption></figure>
+          <figure class="m-shot tall" data-speed="-0.1"><div class="m-shot-img ph tilt"><img src="photos/kalyan.jpg" alt="The Kalyan Minaret in Bukhara" loading="lazy" /></div><figcaption><b>Bukhara</b>The Kalyan Minaret, 1127</figcaption></figure>
+          <figure class="m-shot" data-speed="0.08"><div class="m-shot-img ph tilt"><img src="photos/kashgar.jpg" alt="Clay houses in the old town of Kashgar" loading="lazy" /></div><figcaption><b>Kashgar</b>Clay houses of the old town</figcaption></figure>
+          <figure class="m-shot" data-speed="-0.04"><div class="m-shot-img ph tilt"><img src="photos/pamir.jpg" alt="The Pamir Highway between bare mountains" loading="lazy" /></div><figcaption><b>Pamir</b>The road over the roof of the world</figcaption></figure>
+          <figure class="m-shot" data-speed="0.12"><div class="m-shot-img ph tilt"><img src="photos/taklamakan.jpg" alt="Dunes of the Taklamakan desert seen from a satellite" loading="lazy" /></div><figcaption><b>Taklamakan</b>Dunes from orbit — every ridge is a hill</figcaption></figure>
+          <figure class="m-shot" data-speed="-0.08"><div class="m-shot-img ph tilt"><img src="photos/hagia.jpg" alt="Hagia Sophia in Istanbul" loading="lazy" /></div><figcaption><b>Constantinople</b>Hagia Sophia, finished in 537</figcaption></figure>
+          <figure class="m-shot wide" data-speed="0.05"><div class="m-shot-img ph tilt"><img src="photos/venice.jpg" alt="The Grand Canal and Rialto Bridge in Venice" loading="lazy" /></div><figcaption><b>Venice</b>The Grand Canal, where the silk was sold</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- 03 goods, pinned horizontal track -->
+      <section class="m-goods" id="goods">
+        <div class="m-sticky">
+          <header class="m-head">
+            <p class="eyebrow">04 — What moved along the thread</p>
+            <h2>Silk went west.<br /><em>Everything else went both ways.</em></h2>
+          </header>
+          <div class="m-track" data-track>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Silk — show the story"><div class="g-inner"><div class="g-front"><img src="photos/cocoons.jpg" alt="" loading="lazy" /><span class="m-dir">East → West</span><b>01</b><h3>Silk</h3><p>China kept the secret of the silkworm for centuries. Rome paid in gold and complained about it.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>01</b><h4>Silk</h4><dl><div><dt>Origin</dt><dd>China, c. 3000 BC</dd></div><div><dt>Route</dt><dd>Chang'an → Rome</dd></div></dl><p>In 14 AD the Roman Senate tried to ban men from wearing silk. Nobody listened.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Paper — show the story"><div class="g-inner"><div class="g-front"><img src="photos/paper.jpg" alt="" loading="lazy" /><span class="m-dir">East → West</span><b>02</b><h3>Paper</h3><p>Reached Samarkand by the 8th century, then Baghdad. Europe got it last and wrote everything down.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>02</b><h4>Paper</h4><dl><div><dt>Origin</dt><dd>China, 2nd century BC</dd></div><div><dt>Route</dt><dd>Samarkand → Baghdad → Europe</dd></div></dl><p>Baghdad's first paper mill is said to have opened around 794.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Glass — show the story"><div class="g-inner"><div class="g-front"><img src="photos/glass.jpg" alt="" loading="lazy" /><span class="m-dir">West → East</span><b>03</b><h3>Glass</h3><p>Roman and Syrian glass was a luxury in China — clear, coloured and very hard to carry on a camel.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>03</b><h4>Glass</h4><dl><div><dt>Origin</dt><dd>Syria and the Roman Empire</dd></div><div><dt>Route</dt><dd>Alexandria → Chang'an</dd></div></dl><p>Roman glass bowls have turned up in ancient tombs in China, Korea and Japan.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Horses — show the story"><div class="g-inner"><div class="g-front"><img src="photos/horse.jpg" alt="" loading="lazy" /><span class="m-dir">West → East</span><b>04</b><h3>Horses</h3><p>The Han emperors wanted the “heavenly horses” of the Ferghana valley badly enough to go to war for them.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>04</b><h4>Horses</h4><dl><div><dt>Origin</dt><dd>The Ferghana valley</dd></div><div><dt>Route</dt><dd>Ferghana → Chang'an</dd></div></dl><p>In 104 BC Emperor Wu sent an army west just to bring back the “heavenly horses”.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Grapes — show the story"><div class="g-inner"><div class="g-front"><img src="photos/raisins.jpg" alt="" loading="lazy" /><span class="m-dir">West → East</span><b>05</b><h3>Grapes</h3><p>Grapevines and alfalfa travelled east with the horses. Raisins travelled everywhere — they keep for a whole journey.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>05</b><h4>Grapes</h4><dl><div><dt>Origin</dt><dd>Central Asia and Persia</dd></div><div><dt>Route</dt><dd>Ferghana → China</dd></div></dl><p>Tradition credits Zhang Qian's mission with bringing grapevines and alfalfa to China.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Ideas — show the story"><div class="g-inner"><div class="g-front"><img src="photos/library.jpg" alt="" loading="lazy" /><span class="m-dir">Both ways</span><b>06</b><h3>Ideas</h3><p>Buddhism went east. Numbers, medicine and astronomy went west through Baghdad's House of Wisdom.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>06</b><h4>Ideas</h4><dl><div><dt>Origin</dt><dd>India, Persia, Greece, China</dd></div><div><dt>Route</dt><dd>Both ways, through Baghdad</dd></div></dl><p>Indian numerals reached Europe through Arabic books — so we call them Arabic numerals.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Music — show the story"><div class="g-inner"><div class="g-front"><img src="photos/mogao.jpg" alt="" loading="lazy" /><span class="m-dir">Both ways</span><b>07</b><h3>Music</h3><p>The lute, the pipa and the oud are cousins. Their family tree looks a lot like this map.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>07</b><h4>Music</h4><dl><div><dt>Origin</dt><dd>Central Asia</dd></div><div><dt>Route</dt><dd>Both ways</dd></div></dl><p>The Chinese pipa is thought to descend from Central Asian lutes, cousins of the Persian barbat.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+            <article class="m-good has-photo" tabindex="0" role="button" aria-pressed="false" aria-label="Gunpowder — show the story"><div class="g-inner"><div class="g-front"><img src="photos/gunpowder.jpg" alt="" loading="lazy" /><span class="m-dir">East → West</span><b>08</b><h3>Gunpowder</h3><p>Invented for medicine, used for fireworks, then for everything else. Not a great trade for anyone.</p><span class="g-hint">Tap for the story ↻</span></div><div class="g-back"><b>08</b><h4>Gunpowder</h4><dl><div><dt>Origin</dt><dd>China, 9th century</dd></div><div><dt>Route</dt><dd>East → West</dd></div></dl><p>The oldest known written gunpowder formula is in a Chinese military book from 1044.</p><span class="g-hint">Tap to flip back ↺</span></div></div></article>
+          </div>
+        </div>
+      </section>
+
+      <!-- interlude: the bazaar — how a price grows along the road -->
+      <section class="x-bazaar m-dark" id="bazaar" data-bazaar>
+        <header class="m-head">
+          <p class="eyebrow">Interlude — the bazaar</p>
+          <h2>Why was silk<br /><em>worth its weight in gold?</em></h2>
+        </header>
+        <div class="x-bz-goods" data-bz-goods role="tablist" aria-label="Choose a good"></div>
+        <div class="x-bz-chart" data-bz-chart></div>
+        <p class="x-bz-note" data-bz-note></p>
+        <p class="x-bz-small">A playful estimate: every trader along the way added a profit, a tax or a risk premium.</p>
+      </section>
+
+      <!-- 04 camel hardware review -->
+      <section class="m-camel m-dark" id="camel">
+        <header class="m-head">
+          <p class="eyebrow">05 — Hardware review</p>
+          <h2>The caravan camel.<br /><em>Humps: one or two. Complaints: zero.</em></h2>
+        </header>
+        <div class="m-camel-body">
+          <div class="m-viewer" data-viewer>
+            <canvas aria-label="3D camel you can rotate"></canvas>
+            <span class="m-viewer-hint">Drag to turn</span>
+          </div>
+          <dl class="m-specs">
+            <div><dt>Payload</dt><dd>170–250 kg</dd></div>
+            <div><dt>Range</dt><dd>30–40 km / day</dd></div>
+            <div><dt>Operating temp.</dt><dd>−40 °C to +40 °C</dd></div>
+            <div><dt>Refuel</dt><dd>≈ 100 L in one go</dd></div>
+            <div><dt>Humps</dt><dd>Fat, not water</dd></div>
+            <div><dt>Models</dt><dd>Dromedary (1) · Bactrian (2)</dd></div>
+            <div><dt>Dust filter</dt><dd>Nostrils that close</dd></div>
+            <div><dt>Eye protection</dt><dd>Double eyelashes</dd></div>
+            <div><dt>Firmware</dt><dd>Stubborn, stable</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- full-bleed photo break -->
+      <section class="m-break" data-break>
+        <div class="m-break-img"><img src="photos/registan.jpg" alt="The Registan square in Samarkand" loading="lazy" /></div>
+        <div class="m-break-text">
+          <p class="eyebrow">Samarkand, today</p>
+          <h2>Three madrasas,<br /><em>six centuries, one square.</em></h2>
+        </div>
+      </section>
+
+      <!-- interlude: the map draws itself -->
+      <section class="x-map" id="map" data-map>
+        <div class="m-sticky x-map-sticky">
+          <p class="eyebrow">Interlude — the map draws itself</p>
+          <div class="x-parchment">
+            <svg class="x-map-svg" viewBox="0 0 1000 420" data-map-svg aria-label="Map of the Silk Road"></svg>
+            <div class="x-word-caravan" data-word-caravan aria-hidden="true"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 climate slider -->
+      <section class="m-climate" id="climate" data-climate>
+        <div class="m-climate-bg" aria-hidden="true">
+          <img src="photos/pamir.jpg" alt="" loading="lazy" data-c="cold" />
+          <img src="photos/shahizinda.jpg" alt="" loading="lazy" data-c="mild" />
+          <img src="photos/gobi2.jpg" alt="" loading="lazy" data-c="hot" />
+        </div>
+        <header class="m-head">
+          <p class="eyebrow">06 — Handles extremes with ease</p>
+          <h2>From frozen passes<br /><em>to burning sand.</em></h2>
+        </header>
+        <div class="m-climate-ui">
+          <output class="m-temp"><span data-temp>+20</span><small>°C</small></output>
+          <input type="range" min="-30" max="50" value="20" step="1" aria-label="Temperature" data-temp-input />
+          <div class="m-scale"><span>−30 °C · Pamir pass</span><span>+20 °C · Samarkand, May</span><span>+50 °C · Taklamakan</span></div>
+          <dl class="m-readout">
+            <div><dt>Where</dt><dd data-where></dd></div>
+            <div><dt>Camel status</dt><dd data-status></dd></div>
+            <div><dt>Caravan speed</dt><dd data-speed></dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- 06 caravan post -->
+      <section class="m-post m-dark" id="post">
+        <div class="m-bgphoto" aria-hidden="true"><img src="photos/inscription.jpg" alt="" loading="lazy" /></div>
+        <header class="m-head">
+          <p class="eyebrow">07 — Messaging, the slow way</p>
+          <h2>Send a letter<br /><em>by caravan.</em></h2>
+        </header>
+        <div class="m-post-body">
+          <form class="m-form" data-post>
+            <label>From <select name="from"></select></label>
+            <label>To <select name="to"></select></label>
+            <label class="m-wide">Message <textarea name="msg" rows="3" maxlength="160">Send more silk. And snacks for Zilola.</textarea></label>
+          </form>
+          <div class="m-letter">
+            <small>Sealed with a Sogdian shift cipher (not really)</small>
+            <p class="m-cipher" data-cipher></p>
+            <div class="m-eta"><strong data-eta></strong><span data-eta-note></span></div>
+            <button class="btn" type="button" data-decode>Break the seal</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 timeline -->
+      <section class="m-time" id="time">
+        <header class="m-head">
+          <p class="eyebrow">08 — Release notes</p>
+          <h2>Changelog,<br /><em>138 BC → today.</em></h2>
+        </header>
+        <ol class="m-log" data-log>
+          <li class="has-thumb"><b>138 BC</b><span class="m-thumb"><img src="photos/gobi2.jpg" alt="" loading="lazy" /></span><span>v0.1 — Envoy Zhang Qian heads west for the Han emperor. Gets captured. Comes back 13 years later with maps.</span></li>
+          <li><b>130 BC</b><span>v1.0 — Regular trade opens between Han China and Central Asia.</span></li>
+          <li class="has-thumb"><b>166 AD</b><span class="m-thumb"><img src="photos/glass.jpg" alt="" loading="lazy" /></span><span>Chinese records note envoys claiming to come from Rome.</span></li>
+          <li class="has-thumb"><b>629</b><span class="m-thumb"><img src="photos/xuanzang.jpg" alt="" loading="lazy" /></span><span>The monk Xuanzang walks to India for books. Returns 16 years later, with 657 of them.</span></li>
+          <li class="has-thumb"><b>751</b><span class="m-thumb"><img src="photos/paper.jpg" alt="" loading="lazy" /></span><span>After the Battle of Talas, papermaking spreads west — tradition says through Samarkand.</span></li>
+          <li class="has-thumb"><b>762</b><span class="m-thumb"><img src="photos/library.jpg" alt="" loading="lazy" /></span><span>Baghdad is founded as a perfect circle. The House of Wisdom follows.</span></li>
+          <li class="has-thumb"><b>1271</b><span class="m-thumb"><img src="photos/atlas.jpg" alt="" loading="lazy" /></span><span>Marco Polo leaves Venice. Returns in 1295. Nobody believes a word.</span></li>
+          <li class="has-thumb"><b>1325</b><span class="m-thumb"><img src="photos/ibnbattuta.jpg" alt="" loading="lazy" /></span><span>Ibn Battuta sets off from Tangier for a 29-year trip.</span></li>
+          <li class="has-thumb"><b>1453</b><span class="m-thumb"><img src="photos/hagia.jpg" alt="" loading="lazy" /></span><span>Deprecated — Constantinople falls, sea routes take over the traffic.</span></li>
+          <li class="has-thumb"><b>2014</b><span class="m-thumb"><img src="photos/registan.jpg" alt="" loading="lazy" /></span><span>The Chang'an–Tianshan corridor joins the UNESCO World Heritage list.</span></li>
+          <li><b>Today</b><span>v2.0 — You, scrolling. Thank you for riding.</span></li>
+        </ol>
+      </section>
+
+      <!-- interlude: languages of the road -->
+      <section class="x-langs m-dark" id="langs" data-langs>
+        <header class="m-head">
+          <p class="eyebrow">Interlude — the languages of the road</p>
+          <h2>One word,<br /><em>nine tongues.</em></h2>
+        </header>
+        <div class="x-boards">
+          <div class="x-board" data-word="silk"><small>Silk</small><div class="x-flap" data-flap></div><span class="x-lang-name" data-lang-name></span></div>
+          <div class="x-board" data-word="caravan"><small>Caravan</small><div class="x-flap" data-flap></div><span class="x-lang-name" data-lang-name></span></div>
+          <div class="x-board" data-word="friend"><small>Friend</small><div class="x-flap" data-flap></div><span class="x-lang-name" data-lang-name></span></div>
+        </div>
+      </section>
+
+      <!-- 08 reviews -->
+      <section class="m-reviews m-dark" id="reviews">
+        <header class="m-head m-rating">
+          <p class="eyebrow">09 — Reviews</p>
+          <h2><span class="m-big">4.9</span><em> / 5</em></h2>
+          <p class="m-stars" aria-label="4.9 out of 5">★★★★★</p>
+          <p class="m-note">From 1 600 years of verified travellers (and one camel)</p>
+        </header>
+        <div class="m-review-grid">
+          <figure class="m-review"><p class="m-stars">★★★★★</p><blockquote>“Left at 17, came back at 41. Wrote a book. Nobody believed it. Five stars.”</blockquote><figcaption><span class="m-face"><img src="photos/marcopolo.jpg" alt="" loading="lazy" /></span><span>Marco Polo<small>Venice · merchant</small></span></figcaption></figure>
+          <figure class="m-review"><p class="m-stars">★★★★★</p><blockquote>“Walked to India for some books. Took sixteen years. Worth every step.”</blockquote><figcaption><span class="m-face"><img src="photos/xuanzang.jpg" alt="" loading="lazy" /></span><span>Xuanzang<small>Chang'an · monk</small></span></figcaption></figure>
+          <figure class="m-review"><p class="m-stars">★★★★☆</p><blockquote>“Did about 117 000 km in 29 years. Great road. Ships are faster though.”</blockquote><figcaption><span class="m-face"><img src="photos/ibnbattuta.jpg" alt="" loading="lazy" /></span><span>Ibn Battuta<small>Tangier · traveller</small></span></figcaption></figure>
+          <figure class="m-review"><p class="m-stars">★★★★★</p><blockquote>“Bought in Chang'an, sold in Samarkand. My accountant cried happy tears.”</blockquote><figcaption><span class="m-face"><img src="photos/sogdian.jpg" alt="" loading="lazy" /></span><span>Nanaivandak<small>Samarkand · Sogdian trader</small></span></figcaption></figure>
+          <figure class="m-review"><p class="m-stars">★☆☆☆☆</p><blockquote>“200 kg of silk for a year and nobody said thank you. Hay was fine.”</blockquote><figcaption><span class="m-face"><img src="photos/camelface.jpg" alt="" loading="lazy" /></span><span>Gulnora<small>Camel 03 · logistics</small></span></figcaption></figure>
+          <figure class="m-review"><p class="m-stars">★★★★★</p><blockquote>“Excellent caravans. Very easy to find. Would rob again.”</blockquote><figcaption><span class="m-face"><img src="photos/duststorm.jpg" alt="" loading="lazy" /></span><span>Anonymous<small>Taklamakan · freelance</small></span></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- interlude: voices -->
+      <section class="x-voices" id="voices" data-voices>
+        <header class="m-head">
+          <p class="eyebrow">Interlude — voices from the road</p>
+          <h2>They were<br /><em>really there.</em></h2>
+        </header>
+        <figure class="x-voice x-pen" data-pen>
+          <svg class="x-pen-svg" viewBox="0 0 1200 160" preserveAspectRatio="xMinYMid meet" aria-hidden="true"><text x="6" y="110" data-pen-text>I have not told half of what I saw.</text></svg>
+          <blockquote class="sr-only">I have not told half of what I saw.</blockquote>
+          <figcaption><b>Marco Polo</b><span>on his deathbed, 1324 — as his friends remembered it</span></figcaption>
+        </figure>
+        <figure class="x-voice x-decipher-wrap">
+          <blockquote data-decipher>I set out alone, having neither fellow-traveller in whose companionship I might find cheer, nor caravan whose party I might join.</blockquote>
+          <figcaption><b>Ibn Battuta</b><span>the first lines of his journey, Tangier, 1325</span></figcaption>
+        </figure>
+        <figure class="x-voice x-ink-wrap">
+          <blockquote data-ink>I would rather die going west than return east and live.</blockquote>
+          <figcaption><b>Xuanzang</b><span>as his biography tells it, crossing the desert, 629</span></figcaption>
+        </figure>
+      </section>
+
+      <!-- 09 stacked features -->
+      <section class="m-stack" id="features">
+        <header class="m-head">
+          <p class="eyebrow">10 — Enterprise ready</p>
+          <h2>Built for scale.<br /><em>Since 130 BC.</em></h2>
+        </header>
+        <div class="m-strips" data-strips>
+          <button class="m-strip on" type="button" aria-expanded="true"><img src="photos/gobi.jpg" alt="" loading="lazy" /><span class="s-num">01</span><span class="s-side">Offline-first</span><span class="s-body"><span class="s-title">Offline-first</span><span class="s-text">No signal for 10 500 km. Works perfectly.</span></span></button>
+          <button class="m-strip" type="button" aria-expanded="false"><img src="photos/tashrabat.jpg" alt="" loading="lazy" /><span class="s-num">02</span><span class="s-side">Peer-to-peer</span><span class="s-body"><span class="s-title">Peer-to-peer</span><span class="s-text">No one ever travelled the whole road. Goods hopped from trader to trader, city to city.</span></span></button>
+          <button class="m-strip" type="button" aria-expanded="false"><img src="photos/duststorm.jpg" alt="" loading="lazy" /><span class="s-num">03</span><span class="s-side">99.9% uptime*</span><span class="s-body"><span class="s-title">99.9% uptime*</span><span class="s-text">*Not counting sandstorms, bandits, wars and most of the 14th century.</span></span></button>
+          <button class="m-strip" type="button" aria-expanded="false"><img src="photos/gobi2.jpg" alt="" loading="lazy" /><span class="s-num">04</span><span class="s-side">Load balancing</span><span class="s-body"><span class="s-title">Load balancing</span><span class="s-text">Five camels, five opinions, one direction. Mostly.</span></span></button>
+          <button class="m-strip" type="button" aria-expanded="false"><img src="photos/registannight.jpg" alt="" loading="lazy" /><span class="s-num">05</span><span class="s-side">Open protocol</span><span class="s-body"><span class="s-title">Open protocol</span><span class="s-text">Anyone with a camel and a bit of courage could join. No API keys.</span></span></button>
+          <button class="m-strip" type="button" aria-expanded="false"><img src="photos/camelface.jpg" alt="" loading="lazy" /><span class="s-num">06</span><span class="s-side">Zero emissions**</span><span class="s-body"><span class="s-title">Zero emissions**</span><span class="s-text">**The camels would like a word.</span></span></button>
+        </div>
+      </section>
+
+      <!-- 10 compare -->
+      <section class="m-compare m-dark" id="compare">
+        <header class="m-head">
+          <p class="eyebrow">11 — Choose your plan</p>
+          <h2>Compare<br /><em>the routes.</em></h2>
+        </header>
+        <div class="m-table-wrap">
+          <table class="m-table">
+            <thead>
+              <tr><th></th><th><span class="m-th-img"><img src="photos/gobi.jpg" alt="" loading="lazy" /></span>Silk Road<small>Classic · by land</small></th><th><span class="m-th-img"><img src="photos/dhow.jpg" alt="" loading="lazy" /></span>Silk Road Pro<small>Maritime · by sea</small></th><th class="m-pick"><span class="m-th-img m-th-silk"></span>Silk Road 2.0<small>This website</small></th></tr>
+            </thead>
+            <tbody>
+              <tr><th>Engine</th><td>Bactrian camels</td><td>Monsoon winds</td><td>Your scroll wheel</td></tr>
+              <tr><th>Chang'an → Venice</th><td>≈ 1 year</td><td>≈ 1–2 years</td><td>≈ 2 minutes</td></tr>
+              <tr><th>Cargo</th><td>Silk, paper, jade</td><td>Spices, porcelain</td><td>Facts, 10 cities</td></tr>
+              <tr><th>Bandits</th><td>Yes</td><td>Pirates</td><td>None</td></tr>
+              <tr><th>Weather</th><td>−40 to +50 °C</td><td>Typhoons</td><td>Day → night shader</td></tr>
+              <tr><th>Camels you can click</th><td>Not advised</td><td>—</td><td>7</td></tr>
+              <tr><th>Price</th><td>Everything you own</td><td>Your ship</td><td>Free</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 11 paper -->
+      <section class="m-paper" id="paper">
+        <header class="m-head">
+          <p class="eyebrow">12 — Research</p>
+          <h2>Caravan-1: an open-weight<br /><em>trade model.</em></h2>
+        </header>
+        <div class="m-paper-body">
+          <article class="m-abstract">
+            <p class="m-authors">Zhang Qian, M. Polo, I. Battuta, Gulnora (camel)</p>
+            <h3>Abstract</h3>
+            <p>
+              We present Caravan-1, a distributed system for moving goods and ideas across Eurasia. The model has
+              roughly 200 kg of weights per camel and runs fully offline. Trained for 1 600 years on real-world
+              data — deserts, mountains, markets — it learned paper, numbers, music and religion on the job.
+              We find that silk is all you need.
+            </p>
+            <h3>Acknowledgements</h3>
+            <p>The camels. Every single one of them. Also the wells.</p>
+            <blockquote>“Strong accept. The reviewer would like to know where the other 9 999 km of the appendix went.” — Reviewer 2</blockquote>
+          </article>
+          <div class="m-paper-side">
+          <figure class="m-fig"><div class="ph tilt"><img src="photos/atlas.jpg" alt="" loading="lazy" /></div><figcaption><b>Fig. 1</b> A caravan on the Silk Road, from the Catalan Atlas, 1375.</figcaption></figure>
+          <div class="m-bib">
+            <div class="m-bib-head"><small>Cite this</small><button type="button" data-copy-bib>Copy BibTeX</button></div>
+            <pre data-bib>@article{caravan1,
+  title   = {Caravan-1: An Open-Weight Trade Model},
+  author  = {Qian, Zhang and Polo, Marco and
+             Battuta, Ibn and Gulnora},
+  journal = {Proceedings of the Silk Road},
+  year    = {-130},
+  pages   = {0--10500},
+  note    = {Camel-reviewed}
+}</pre>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- quiz -->
+      <section class="m-quiz" id="quiz" data-quiz>
+        <header class="m-head">
+          <p class="eyebrow">Quiz — one minute</p>
+          <h2>Which Silk Road good<br /><em>are you?</em></h2>
+        </header>
+        <div class="qz-bar"><i data-quiz-bar></i></div>
+        <div class="qz-stage" data-quiz-stage></div>
+      </section>
+
+      <div class="m-marquee m-mq-dark" data-marquee aria-hidden="true"><div class="m-mq-track"><span>Chang'an</span><i>✦</i><span>Dunhuang</span><i>✦</i><span>Taklamakan</span><i>✦</i><span>Kashgar</span><i>✦</i><span>Pamir</span><i>✦</i><span>Samarkand</span><i>✦</i><span>Bukhara</span><i>✦</i><span>Baghdad</span><i>✦</i><span>Constantinople</span><i>✦</i><span>Venice</span><i>✦</i><span>Chang'an</span><i>✦</i><span>Dunhuang</span><i>✦</i><span>Taklamakan</span><i>✦</i><span>Kashgar</span><i>✦</i><span>Pamir</span><i>✦</i><span>Samarkand</span><i>✦</i><span>Bukhara</span><i>✦</i><span>Baghdad</span><i>✦</i><span>Constantinople</span><i>✦</i><span>Venice</span><i>✦</i></div></div>
+
+      <!-- 12 final call -->
+      <section class="m-cta m-dark">
+        <div class="m-bgphoto m-cta-bg" aria-hidden="true"><img src="photos/registannight.jpg" alt="" loading="lazy" /></div>
+        <canvas class="x-stars" data-stars aria-hidden="true"></canvas>
+        <p class="eyebrow">13 — The end of the road</p>
+        <h2 class="sr-only"><span class="row">One thread.</span><span class="row"><em>Ride it again.</em></span></h2>
+        <p class="x-cta-line">One thread. <em>Ride it again.</em></p>
+        <div class="m-cta-btns">
+          <button class="btn" data-ride>↺ Back to Chang'an</button>
+          <button class="btn" data-share>Share the road</button>
+        </div>
+      </section>
+
+      <footer class="m-foot">
+        <span>Silk Road 2.0 — an interactive journey</span>
+        <span>Built with Three.js · camel by kenchoo, horse by MAXDESIGN-3D (CC BY 4.0, Sketchfab) · textures by Poly Haven (CC0)</span>
+        <span>History is simplified. The camels are real (in 3D).</span>
+        <details class="m-credits"><summary>Photo credits</summary><ul data-credits></ul></details>
+      </footer>
+    </main>
+
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
